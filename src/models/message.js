@@ -39,9 +39,9 @@ const updateMessage = ({ channel, ts, data }) => Message.update({
   },
 })
 
-const deleteMessage = ({ channel_id, ts }) => Message.destroy({
+const deleteMessage = ({ channel, ts }) => Message.destroy({
   where: {
-    channel_id,
+    channel,
     ts,
   },
 })
