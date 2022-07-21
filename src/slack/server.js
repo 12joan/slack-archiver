@@ -8,42 +8,47 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 })
 
-app.event('message', ({ event }) => {
-  const { subtype = 'message_posted' } = event
+app.event('message', async ({ event }) => {
+  try {
+    const { subtype = 'message_posted' } = event
 
-  switch (subtype) {
-    case 'message_posted':
-      createMessage({
-        workspace_id: event.team,
-        channel_id: event.channel,
-        ts: event.ts,
-        data: event,
-      })
-      break
+    switch (subtype) {
+      case 'me_message':
+      case 'bot_message':
+      case 'file_share':
+      case 'message_replied':
+      case 'message_posted':
+        await createMessage({
+          channel_id: event.channel,
+          ts: event.ts,
+          data: event,
+        })
+        break
 
-    case 'message_changed':
-      updateMessage({
-        workspace_id: event.message.team,
-        channel_id: event.channel,
-        ts: event.message.ts,
-        data: {
-          channel: event.channel,
-          channel_type: event.channel_type,
-          ...event.message,
-        },
-      })
-      break
+      case 'message_changed':
+        await updateMessage({
+          channel_id: event.channel,
+          ts: event.message.ts,
+          data: {
+            channel: event.channel,
+            channel_type: event.channel_type,
+            ...event.message,
+          },
+        })
+        break
 
-    case 'message_deleted':
-      deleteMessage({
-        workspace_id: event.previous_message.team,
-        channel_id: event.channel,
-        ts: event.previous_message.ts,
-      })
-      break
+      case 'message_deleted':
+        await deleteMessage({
+          channel_id: event.channel,
+          ts: event.previous_message.ts,
+        })
+        break
 
-    default:
-      console.warn(`Unhandled event subtype: ${subtype}`)
+      default:
+        console.warn(`Unhandled event subtype: ${subtype}`, event)
+    }
+  } catch (error) {
+    console.error('Error handling event', { error, event })
   }
 })
 
