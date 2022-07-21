@@ -2,6 +2,7 @@ import bolt from '@slack/bolt'
 const { App } = bolt
 
 import { createMessage, updateMessage, deleteMessage } from '../models/message.js'
+import { updateUpTime } from '../models/upTime.js'
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -9,6 +10,8 @@ const app = new App({
 })
 
 app.event('message', async ({ event }) => {
+  let wasError = false
+
   try {
     const { subtype = 'message_posted' } = event
 
@@ -49,6 +52,13 @@ app.event('message', async ({ event }) => {
     }
   } catch (error) {
     console.error('Error handling event', { error, event })
+    wasError = true
+  }
+
+  try {
+    await updateUpTime({ wasError })
+  } catch (error) {
+    console.error('Error updating upTime', { error })
   }
 })
 

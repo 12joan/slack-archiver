@@ -1,0 +1,22 @@
+name: On push
+
+on: push
+
+jobs:
+  deploy_production:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: satackey/action-docker-layer-caching@v0.0.11
+      continue-on-error: true
+
+    - uses: zenato/docker-action@master
+      with:
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+        repository: ${{ secrets.REGISTRY_REPO }}
+        registry: ${{ secrets.REGISTRY_URL }}
+        tag: production
