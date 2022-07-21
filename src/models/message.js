@@ -1,7 +1,7 @@
 import sequelize from './sequelize.js'
 
 const Message = sequelize.define('Message', {
-  channel_id: {
+  channel: {
     type: sequelize.Sequelize.STRING,
     allowNull: false,
   },
@@ -17,24 +17,24 @@ const Message = sequelize.define('Message', {
   indexes: [
     {
       unique: true,
-      fields: ['channel_id', 'ts'],
+      fields: ['channel', 'ts'],
     },
   ],
 })
 
 await Message.sync({ alter: true })
 
-const createMessage = ({ channel_id, ts, data }) => Message.create({
-  channel_id,
+const createMessage = ({ channel, ts, data }) => Message.create({
+  channel,
   ts,
   data,
 })
 
-const updateMessage = ({ channel_id, ts, data }) => Message.update({
+const updateMessage = ({ channel, ts, data }) => Message.update({
   data,
 }, {
   where: {
-    channel_id,
+    channel,
     ts,
   },
 })

@@ -19,7 +19,7 @@ app.event('message', async ({ event }) => {
       case 'message_replied':
       case 'message_posted':
         await createMessage({
-          channel_id: event.channel,
+          channel: event.channel,
           ts: event.ts,
           data: event,
         })
@@ -27,7 +27,7 @@ app.event('message', async ({ event }) => {
 
       case 'message_changed':
         await updateMessage({
-          channel_id: event.channel,
+          channel: event.channel,
           ts: event.message.ts,
           data: {
             channel: event.channel,
@@ -39,7 +39,7 @@ app.event('message', async ({ event }) => {
 
       case 'message_deleted':
         await deleteMessage({
-          channel_id: event.channel,
+          channel: event.channel,
           ts: event.previous_message.ts,
         })
         break
