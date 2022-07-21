@@ -1,50 +1,50 @@
 import bolt from '@slack/bolt'
 const { App } = bolt
 
+import { createMessage, updateMessage, deleteMessage } from '../models/message.js'
+
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 })
 
-app.event('message', async ({ event }) => {
+app.event('message', ({ event }) => {
   const { subtype = 'message_posted' } = event
 
-  const handlers = {
-    message_posted: () => {
-      console.log({
-        action: 'insert',
+  switch (subtype) {
+    case 'message_posted':
+      createMessage({
         workspace_id: event.team,
         channel_id: event.channel,
-        message_id: event.ts,
-        message: event,
+        ts: event.ts,
+        data: event,
       })
-    },
-    message_changed: () => {
-      console.log({
-        action: 'update',
+      break
+
+    case 'message_changed':
+      updateMessage({
         workspace_id: event.message.team,
         channel_id: event.channel,
-        message_id: event.ts,
-        message: {
+        ts: event.message.ts,
+        data: {
           channel: event.channel,
           channel_type: event.channel_type,
           ...event.message,
         },
       })
-    },
-    message_deleted: () => {
-      console.log({
-        action: 'delete',
+      break
+
+    case 'message_deleted':
+      deleteMessage({
         workspace_id: event.previous_message.team,
         channel_id: event.channel,
-        message_id: event.ts,
+        ts: event.previous_message.ts,
       })
-    }
+      break
+
+    default:
+      console.warn(`Unhandled event subtype: ${subtype}`)
   }
-
-  const defaultHandler = () => console.warn(`Unknown event type: ${subtype}`)
-
-  ;(handlers[subtype] ?? defaultHandler)()
 })
 
 ;(async () => {
