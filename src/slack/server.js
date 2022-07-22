@@ -1,15 +1,20 @@
 import bolt from '@slack/bolt'
 const { App } = bolt
 
+import installationStore from '../models/installationStore.js'
 import { createMessage, updateMessage, deleteMessage } from '../models/message.js'
 import { updateUpTime } from '../models/upTime.js'
 
 const app = new App({
-  token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
+  clientId: process.env.SLACK_CLIENT_ID,
+  clientSecret: process.env.SLACK_CLIENT_SECRET,
+  stateSecret: process.env.SLACK_STATE_SECRET,
+  scopes: ['app_mentions:read', 'channels:history', 'chat:write', 'groups:history', 'im:history', 'mpim:history'],
+  installationStore,
 })
 
-app.event('message', async ({ event }) => {
+app.event('message', async ({ event, ...otherArgs }) => {
   let wasError = false
 
   try {
