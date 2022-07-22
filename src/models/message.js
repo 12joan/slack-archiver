@@ -6,6 +6,7 @@ const Message = sequelize.define('message', {
     primaryKey: true,
     autoIncrement: true,
   },
+  team: sequelize.Sequelize.STRING,
   channel: sequelize.Sequelize.STRING,
   ts: sequelize.Sequelize.STRING,
   data: sequelize.Sequelize.JSON,
@@ -13,23 +14,26 @@ const Message = sequelize.define('message', {
   updatedAt: sequelize.Sequelize.DATE,
 })
 
-const createMessage = ({ channel, ts, data }) => Message.create({
+const createMessage = ({ team, channel, ts, data }) => Message.create({
+  team,
   channel,
   ts,
   data,
 })
 
-const updateMessage = ({ channel, ts, data }) => Message.update({
+const updateMessage = ({ team, channel, ts, data }) => Message.update({
   data,
 }, {
   where: {
+    team,
     channel,
     ts,
   },
 })
 
-const deleteMessage = ({ channel, ts }) => Message.destroy({
+const deleteMessage = ({ team, channel, ts }) => Message.destroy({
   where: {
+    team,
     channel,
     ts,
   },

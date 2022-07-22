@@ -14,7 +14,9 @@ const app = new App({
   installationStore,
 })
 
-app.event('message', async ({ event, ...otherArgs }) => {
+app.event('message', async ({ event, context }) => {
+  const enterpriseOrTeamId = context.enterpriseId ?? context.teamId
+
   let wasError = false
 
   try {
@@ -27,6 +29,7 @@ app.event('message', async ({ event, ...otherArgs }) => {
       case 'message_replied':
       case 'message_posted':
         await createMessage({
+          team: enterpriseOrTeamId,
           channel: event.channel,
           ts: event.ts,
           data: event,
@@ -35,6 +38,7 @@ app.event('message', async ({ event, ...otherArgs }) => {
 
       case 'message_changed':
         await updateMessage({
+          team: enterpriseOrTeamId,
           channel: event.channel,
           ts: event.message.ts,
           data: {
@@ -47,6 +51,7 @@ app.event('message', async ({ event, ...otherArgs }) => {
 
       case 'message_deleted':
         await deleteMessage({
+          team: enterpriseOrTeamId,
           channel: event.channel,
           ts: event.previous_message.ts,
         })
