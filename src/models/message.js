@@ -1,28 +1,17 @@
 import sequelize from './sequelize.js'
 
-const Message = sequelize.define('Message', {
-  channel: {
-    type: sequelize.Sequelize.STRING,
-    allowNull: false,
+const Message = sequelize.define('message', {
+  id: {
+    type: sequelize.Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
   },
-  ts: {
-    type: sequelize.Sequelize.STRING,
-    allowNull: false,
-  },
-  data: {
-    type: sequelize.Sequelize.JSON,
-    allowNull: false,
-  },
-}, {
-  indexes: [
-    {
-      unique: true,
-      fields: ['channel', 'ts'],
-    },
-  ],
+  channel: sequelize.Sequelize.STRING,
+  ts: sequelize.Sequelize.STRING,
+  data: sequelize.Sequelize.JSON,
+  createdAt: sequelize.Sequelize.DATE,
+  updatedAt: sequelize.Sequelize.DATE,
 })
-
-await Message.sync({ alter: true })
 
 const createMessage = ({ channel, ts, data }) => Message.create({
   channel,

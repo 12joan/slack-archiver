@@ -1,29 +1,17 @@
 import sequelize from './sequelize.js'
 
-const UpTime = sequelize.define('UpTime', {
-  instance: {
-    type: sequelize.Sequelize.STRING,
-    allowNull: false,
-  },
-  lastActiveAt: {
-    type: sequelize.Sequelize.DATE,
-    allowNull: false,
-  },
-  errorCount: {
+const UpTime = sequelize.define('uptime', {
+  id: {
     type: sequelize.Sequelize.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
+    primaryKey: true,
+    autoIncrement: true,
   },
-}, {
-  indexes: [
-    {
-      unique: false,
-      fields: ['instance'],
-    },
-  ],
+  instance: sequelize.Sequelize.STRING,
+  lastActiveAt: sequelize.Sequelize.DATE,
+  errorCount: sequelize.Sequelize.INTEGER,
+  createdAt: sequelize.Sequelize.DATE,
+  updatedAt: sequelize.Sequelize.DATE,
 })
-
-await UpTime.sync({ alter: true })
 
 const currentUpTime = await UpTime.create({
   instance: process.env.INSTANCE_ID ?? '<no instance id>',

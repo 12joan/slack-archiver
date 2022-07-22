@@ -1,17 +1,14 @@
 import sequelize from './sequelize.js'
 
-const Installation = sequelize.define('Installation', {
+const Installation = sequelize.define('installation', {
   id: {
     type: sequelize.Sequelize.STRING,
     primaryKey: true,
   },
-  data: {
-    type: sequelize.Sequelize.JSON,
-    allowNull: false,
-  },
+  data: sequelize.Sequelize.JSON,
+  createdAt: sequelize.Sequelize.DATE,
+  updatedAt: sequelize.Sequelize.DATE,
 })
-
-await Installation.sync({ alter: true })
 
 const installationStore = {
   storeInstallation: installation => {
