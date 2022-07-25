@@ -16,7 +16,8 @@ const app = new App({
     'chat:write',
     'groups:history',
     'im:history',
-    'mpim:history'
+    'mpim:history',
+    'commands',
   ],
   installationStore,
 })
