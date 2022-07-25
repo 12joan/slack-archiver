@@ -1,0 +1,45 @@
+display_information:
+  name: <%= @app_name %>
+features:
+  bot_user:
+    display_name: <%= @app_name %>
+    always_online: false
+  slash_commands:
+    - command: /slack-archiver
+      url: <%= url_for('/slack/events') %>
+      description: Manage archiver bot
+      usage_hint: help [or archive-channel, etc.]
+      should_escape: false
+oauth_config:
+  redirect_urls:
+    - <%= url_for('/slack/oauth_redirect') %>
+  scopes:
+    user:
+      - channels:read
+      - groups:read
+      - im:history
+      - im:read
+      - mpim:history
+      - mpim:read
+      - channels:history
+      - groups:history
+    bot:
+      - chat:write
+      - app_mentions:read
+      - channels:history
+      - groups:history
+      - im:history
+      - mpim:history
+      - commands
+settings:
+  event_subscriptions:
+    request_url: <%= url_for('/slack/events') %>
+    user_events:
+      - message.im
+      - message.mpim
+    bot_events:
+      - message.channels
+      - message.groups
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
