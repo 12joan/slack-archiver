@@ -21,6 +21,15 @@ const createMessage = ({ team, channel, ts, data }) => Message.create({
   data,
 })
 
+const createMessageIfNotExists = async ({ team, channel, ts, data }) => {
+  const [message, created] = await Message.findOrCreate({
+    where: { team, channel, ts },
+    defaults: { data },
+  })
+
+  return created
+}
+
 const updateMessage = ({ team, channel, ts, data }) => Message.update({
   data,
 }, {
@@ -41,6 +50,7 @@ const deleteMessage = ({ team, channel, ts }) => Message.destroy({
 
 export {
   createMessage,
+  createMessageIfNotExists,
   updateMessage,
   deleteMessage,
 }

@@ -10,6 +10,8 @@ const Installation = sequelize.define('installation', {
   updatedAt: sequelize.Sequelize.DATE,
 })
 
+const findInstallation = id => Installation.findOne({ where: { id } })
+
 const installationStore = {
   storeInstallation: installation => {
     const enterpriseOrTeamId = (installation.enterprise ?? installation.team).id
@@ -27,10 +29,9 @@ const installationStore = {
       })
   },
 
-  fetchInstallation: installQuery => {
-    const enterpriseOrTeamId = installQuery.enterpriseId ?? installQuery.teamId
-    return Installation.findOne({ where: { id: enterpriseOrTeamId } })
-  },
+  fetchInstallation: installQuery => findInstallation(
+    installQuery.enterpriseId ?? installQuery.teamId
+  ),
 
   deleteInstallation: installQuery => {
     const enterpriseOrTeamId = installQuery.enterpriseId ?? installQuery.teamId
@@ -39,3 +40,7 @@ const installationStore = {
 }
 
 export default installationStore
+
+export {
+  findInstallation,
+}
