@@ -21,11 +21,15 @@ const createMessage = ({ team, channel, ts, data }) => Message.create({
   data,
 })
 
-const createMessageIfNotExists = async ({ team, channel, ts, data }) => {
+const createOrUpdateMessage = async ({ team, channel, ts, data }) => {
   const [message, created] = await Message.findOrCreate({
     where: { team, channel, ts },
     defaults: { data },
   })
+
+  if (!created) {
+    await message.update({ data })
+  }
 
   return created
 }
@@ -50,7 +54,7 @@ const deleteMessage = ({ team, channel, ts }) => Message.destroy({
 
 export {
   createMessage,
-  createMessageIfNotExists,
+  createOrUpdateMessage,
   updateMessage,
   deleteMessage,
 }

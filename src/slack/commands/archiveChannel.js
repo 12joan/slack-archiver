@@ -1,6 +1,6 @@
 import withToken from '../withToken.js'
 import withPagination from '../withPagination.js'
-import { createMessageIfNotExists } from '../../models/message.js'
+import { createOrUpdateMessage } from '../../models/message.js'
 
 const archiveChannel = withToken(async ({ command, client, context, token, respond }) => {
   try {
@@ -12,7 +12,7 @@ const archiveChannel = withToken(async ({ command, client, context, token, respo
 
     const handleMessages = async messages => {
       newMessages += (
-        await Promise.all(messages.map(message => createMessageIfNotExists({
+        await Promise.all(messages.map(message => createOrUpdateMessage({
           team: context.enterpriseId ?? context.teamId,
           channel,
           ts: message.ts,
