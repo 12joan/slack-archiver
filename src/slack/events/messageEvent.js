@@ -1,60 +1,47 @@
+import handleErrors from '../handleErrors.js'
 import { createMessage, updateMessage, deleteMessage } from '../../models/message.js'
-import { updateUpTime } from '../../models/upTime.js'
 
-export default app => app.event('message', async ({ event, context }) => {
+export default app => app.event('message', handleErrors(async ({ event, context }) => {
   const enterpriseOrTeamId = context.enterpriseId ?? context.teamId
+  const { subtype = 'message_posted' } = event
 
-  let wasError = false
+  switch (subtype) {
+    case 'me_message':
+    case 'bot_message':
+    case 'file_share':
+    case 'channel_join':
+    case 'message_replied':
+    case 'message_posted':
+      await createMessage({
+        team: enterpriseOrTeamId,
+        channel: event.channel,
+        ts: event.ts,
+        data: event,
+      })
+      break
 
-  try {
-    const { subtype = 'message_posted' } = event
-
-    switch (subtype) {
-      case 'me_message':
-      case 'bot_message':
-      case 'file_share':
-      case 'message_replied':
-      case 'message_posted':
-        await createMessage({
-          team: enterpriseOrTeamId,
+    case 'message_changed':
+      await updateMessage({
+        team: enterpriseOrTeamId,
+        channel: event.channel,
+        ts: event.message.ts,
+        data: {
           channel: event.channel,
-          ts: event.ts,
-          data: event,
-        })
-        break
+          channel_type: event.channel_type,
+          ...event.message,
+        },
+      })
+      break
 
-      case 'message_changed':
-        await updateMessage({
-          team: enterpriseOrTeamId,
-          channel: event.channel,
-          ts: event.message.ts,
-          data: {
-            channel: event.channel,
-            channel_type: event.channel_type,
-            ...event.message,
-          },
-        })
-        break
+    case 'message_deleted':
+      await deleteMessage({
+        team: enterpriseOrTeamId,
+        channel: event.channel,
+        ts: event.previous_message.ts,
+      })
+      break
 
-      case 'message_deleted':
-        await deleteMessage({
-          team: enterpriseOrTeamId,
-          channel: event.channel,
-          ts: event.previous_message.ts,
-        })
-        break
-
-      default:
-        console.warn(`Unhandled event subtype: ${subtype}`, event)
-    }
-  } catch (error) {
-    console.error('Error handling event', { error, event })
-    wasError = true
+    default:
+      console.warn(`Unhandled event subtype: ${subtype}`, event)
   }
-
-  try {
-    await updateUpTime({ wasError })
-  } catch (error) {
-    console.error('Error updating upTime', { error })
-  }
-})
+}))

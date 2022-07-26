@@ -3,6 +3,7 @@ const { App } = bolt
 
 import installationStore from '../models/installationStore.js'
 import messageEvent from './events/messageEvent.js'
+import channelCreatedEvent from './events/channelCreatedEvent.js'
 import slashCommand from './commands/index.js'
 
 const app = new App({
@@ -13,6 +14,8 @@ const app = new App({
   scopes: [
     'app_mentions:read',
     'channels:history',
+    'channels:read',
+    'channels:join',
     'chat:write',
     'groups:history',
     'im:history',
@@ -24,6 +27,7 @@ const app = new App({
 
 ;[
   messageEvent,
+  channelCreatedEvent,
   slashCommand,
 ].forEach(registerHandlers => registerHandlers(app))
 
