@@ -1,17 +1,17 @@
 import express from 'express'
 import { checkViewToken } from '../models/accessToken.js'
+import { fetchMessagesForChannel } from '../models/message.js'
 
 const app = express.Router()
 
 app.get('/view/:token', async (req, res) => {
-  res.set('Content-Type', 'text/plain')
-
   const { token } = req.params
   const { state, team, channel } = await checkViewToken(token)
 
   switch (state) {
     case 'valid':
-      res.send(`Not implemented yet. Team: ${team}, Channel: ${channel}`)
+      const messages = await fetchMessagesForChannel({ team, channel })
+      res.render('viewChannel', { messages })
       break
 
     case 'invalid':

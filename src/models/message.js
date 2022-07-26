@@ -52,9 +52,24 @@ const deleteMessage = ({ team, channel, ts }) => Message.destroy({
   },
 })
 
+const fetchMessagesForChannel = async ({ team, channel }) => {
+  const messages = await Message.findAll({
+    where: {
+      team,
+      channel,
+    },
+    order: [
+      ['ts', 'ASC'],
+    ],
+  })
+
+  return messages.map(message => message.data)
+}
+
 export {
   createMessage,
   createOrUpdateMessage,
   updateMessage,
   deleteMessage,
+  fetchMessagesForChannel,
 }
