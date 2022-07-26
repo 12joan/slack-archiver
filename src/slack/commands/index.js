@@ -1,15 +1,23 @@
 import archiveChannelCommand from './archiveChannelCommand.js'
+import joinPublicChannelsCommand from './joinPublicChannelsCommand.js'
+
+const commands = {
+  'archive-channel': { handler: archiveChannelCommand, description: 'Archive all messages in the current channel' },
+  'join-public-channels': { handler: joinPublicChannelsCommand, description: 'Join all public channels' },
+}
+
+const commandHints = Object.entries(commands).map(([command, { description }]) =>
+  `\`/slack-archiver ${command}\` - ${description}`
+).join('\n')
 
 export default app => app.command('/slack-archiver', async args => {
   await args.ack()
 
-  switch (args.command.text.split(/\s+/)[0]) {
-    case 'archive-channel':
-      await archiveChannelCommand(args)
-      break
+  const command = args.command.text.split(/\s+/)[0]
 
-    case 'help':
-    default:
-      await args.respond('Help!')
+  if (command in commands) {
+    await commands[command].handler(args)
+  } else {
+    await args.respond(`Usage:\n\n${commandHints}`)
   }
 })
