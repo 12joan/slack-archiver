@@ -1,13 +1,8 @@
-import { findInstallation } from '../models/installationStore.js'
+import withInstallation from './withInstallation.js'
 
-const withToken = func => async args => {
-  const { enterpriseId, teamId } = args.context
-
-  const { token } = (
-    await findInstallation(enterpriseId ?? teamId)
-  ).data.bot
-
+const withToken = func => withInstallation(async ({ installation, ...args }) => {
+  const { token } = installation.bot
   return func({ ...args, token })
-}
+})
 
 export default withToken

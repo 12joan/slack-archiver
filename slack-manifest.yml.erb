@@ -33,6 +33,7 @@ oauth_config:
       - im:history
       - mpim:history
       - channels:join
+      - groups:read
 settings:
   event_subscriptions:
     request_url: <%= url_for('/slack/events') %>
@@ -41,6 +42,7 @@ settings:
       - message.mpim
     bot_events:
       - channel_created
+      - member_joined_channel
       - message.channels
       - message.groups
   org_deploy_enabled: false

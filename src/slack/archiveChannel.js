@@ -1,24 +1,13 @@
-import handleErrors from '../handleErrors.js'
-import withToken from '../withToken.js'
-import withPagination from '../withPagination.js'
-import { createOrUpdateMessage } from '../../models/message.js'
+import withPagination from './withPagination.js'
+import { createOrUpdateMessage } from '../models/message.js'
 
-const errorHandler = async ({ error, respond }) => {
-  await respond(`Error archiving channel: ${error.message}.\n\nYou may need to invite the bot to the channel.`)
-  return { doNotLogError: true }
-}
-
-const archiveChannel = handleErrors(withToken(async ({ command, client, context, token, respond }) => {
-  const { channel_id: channel } = command
-
-  await respond('Archiving channel. This may take a while...')
-
+const archiveChannel = async ({ team, channel, client, token }) => {
   let newMessages = 0
 
   const handleMessages = async messages => {
     newMessages += (
       await Promise.all(messages.map(message => createOrUpdateMessage({
-        team: context.enterpriseId ?? context.teamId,
+        team,
         channel,
         ts: message.ts,
         data: message,
@@ -43,7 +32,7 @@ const archiveChannel = handleErrors(withToken(async ({ command, client, context,
     ))
   })
 
-  await respond(`Archived ${newMessages} new messages`)
-}), errorHandler)
+  return newMessages
+}
 
 export default archiveChannel

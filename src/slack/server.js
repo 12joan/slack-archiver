@@ -4,6 +4,7 @@ const { App } = bolt
 import installationStore from '../models/installationStore.js'
 import messageEvent from './events/messageEvent.js'
 import channelCreatedEvent from './events/channelCreatedEvent.js'
+import memberJoinedChannelEvent from './events/memberJoinedChannelEvent.js'
 import slashCommand from './commands/index.js'
 
 const app = new App({
@@ -28,6 +29,7 @@ const app = new App({
 ;[
   messageEvent,
   channelCreatedEvent,
+  memberJoinedChannelEvent,
   slashCommand,
 ].forEach(registerHandlers => registerHandlers(app))
 
