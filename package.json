@@ -11,8 +11,8 @@
     "sequelize-cli": "^6.4.1"
   },
   "scripts": {
-    "start": "node src/slack/server.js",
-    "dev": "nodemon src/slack/server.js"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"

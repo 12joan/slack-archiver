@@ -1,9 +1,11 @@
 import archiveChannelCommand from './archiveChannelCommand.js'
 import joinPublicChannelsCommand from './joinPublicChannelsCommand.js'
+import viewCommand from './viewCommand.js'
 
 const commands = {
   'archive-channel': { handler: archiveChannelCommand, description: 'Archive all messages in the current channel' },
   'join-public-channels': { handler: joinPublicChannelsCommand, description: 'Join all public channels' },
+  'view': { handler: viewCommand, description: 'View the archive for the current channel' }
 }
 
 const commandHints = Object.entries(commands).map(([command, { description }]) =>
