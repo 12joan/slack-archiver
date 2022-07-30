@@ -20,7 +20,7 @@ const archiveChannelCommand = handleErrors(withToken(async ({ command, client, c
     token,
   })
 
-  if (newMessages.length > 0) {
+  if (newMessages > 0) {
     await respond(`Archived ${newMessages} new messages`)
   } else {
     await respond('No new messages to archive')
