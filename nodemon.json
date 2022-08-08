@@ -1,3 +1,7 @@
 {
-  "watch": ["src/"]
+  "watch": [
+    "src/server.js",
+    "src/api/",
+    "src/bolt/"
+  ]
 }

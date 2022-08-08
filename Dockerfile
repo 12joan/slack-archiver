@@ -7,6 +7,8 @@ RUN yarn install --frozen-lockfile --non-interactive
 
 COPY . .
 
+RUN yarn build
+
 COPY docker/entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]

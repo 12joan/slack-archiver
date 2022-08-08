@@ -11,15 +11,15 @@ app.get('/view/:token', async (req, res) => {
   switch (state) {
     case 'valid':
       const messages = await fetchMessagesForChannel({ team, channel })
-      res.render('viewChannel', { messages })
+      res.json({ ok: true, data: messages })
       break
 
     case 'invalid':
-      res.send('Invalid access token')
+      res.json({ ok: false, error: 'This view link is invalid' })
       break
 
     case 'expired':
-      res.send('This URL has expired')
+      res.json({ ok: false, error: 'This view link has expried' })
       break
 
     default:
