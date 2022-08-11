@@ -2,19 +2,35 @@ import React from 'react'
 
 const MessageAttachment = ({ data }) => {
   return (
-    <div style={{ borderLeft: '0.25rem solid #ccc', paddingLeft: '1em' }}>
-      {data.service_name && (
-        <strong style={{ display: 'block' }}>
-          {data.service_icon && (
-            <img src={data.service_icon} aria-hidden="true" style={{ maxHeight: '1em' }} />
-          )} {data.service_name}
-        </strong>
+    <div className="mt-4 border-l-4 border-slate-500 pl-4 py-2 space-y-4">
+      {(data.service_name || data.text) && (
+        <div>
+          {data.service_name && (
+            <strong className="flex gap-2 items-center">
+              {data.service_icon && (
+                <img src={data.service_icon} aria-hidden="true" className="max-h-4" />
+              )}
+
+              {data.service_name}
+            </strong>
+          )}
+
+          {data.text && <p>{data.text}</p>}
+        </div>
       )}
 
-      {data.text && <p>{data.text}</p>}
-
       {data.image_url && (
-        <img src={data.image_url} alt={data.fallback} style={{ maxWidth: '100%' }} />
+        <a
+          href={data.image_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block">
+          <img
+            src={data.image_url}
+            alt={data.fallback}
+            className="rounded w-auto max-w-sm"
+          />
+        </a>
       )}
     </div>
   )

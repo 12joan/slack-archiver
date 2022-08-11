@@ -1,16 +1,24 @@
 import React from 'react'
-import Message from './Message'
+import Message, { PlaceholderMessage } from './Message'
 
-const MessageList = ({ messages }) => {
+const MessageList = ({ messages, MessageComponent = Message, className }) => {
   return (
-    <ul>
+    <ul className={`space-y-6 ${className || ''}`}>
       {messages.map(message => (
-        <li key={message.ts}>
-          <Message data={message} />
-        </li>
-      ))}
+        <MessageComponent key={message.ts} data={message} />
+     ))}
     </ul>
   )
 }
 
+const PlaceholderMessageList = () => MessageList({
+  className: "mb-[10000vh]", // For scroll restoration
+  messages: Array.from({ length: 100 }, (_, i) => ({ ts: `${i}` })),
+  MessageComponent: PlaceholderMessage,
+})
+
 export default MessageList
+
+export {
+  PlaceholderMessageList,
+}

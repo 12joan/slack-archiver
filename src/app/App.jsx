@@ -1,17 +1,18 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import './css/application.css'
 import ViewChannel from './pages/ViewChannel'
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/app">
-        <Route path="view/:token" element={<ViewChannel />} />
-      </Route>
+    <main className="p-4">
+      <Routes>
+        <Route path="/app">
+          <Route path="view" element={<ViewChannel />} />
+        </Route>
 
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </main>
   )
 }
 
