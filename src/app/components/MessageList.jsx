@@ -1,11 +1,11 @@
 import React from 'react'
 import Message, { PlaceholderMessage } from './Message'
 
-const MessageList = ({ messages, MessageComponent = Message, className }) => {
+const MessageList = ({ messages, MessageComponent = Message, className, ...otherProps }) => {
   return (
     <ul className={`space-y-6 ${className || ''}`}>
       {messages.map(message => (
-        <MessageComponent key={message.ts} data={message} />
+        <MessageComponent key={message.ts} data={message} {...otherProps} />
      ))}
     </ul>
   )

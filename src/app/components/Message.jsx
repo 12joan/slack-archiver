@@ -2,14 +2,19 @@ import React from 'react'
 import { toHTML as renderMarkdown } from 'slack-markdown'
 import MessageAttachment from './MessageAttachment'
 
-const Message = ({ data }) => {
+const Message = ({ data, context }) => {
+  const { lookupUserName, lookupUserAvatar } = context
+
   const renderedText = renderMarkdown(data.text, {
     escapeHtml: true,
+    slackCallbacks: {
+      user: ({ id }) => lookupUserName(id),
+    },
   })
 
   return (
-    <MessageContainer>
-      <strong>{data.user}</strong>
+    <MessageContainer avatar={lookupUserAvatar(data.user)}>
+      <strong>{lookupUserName(data.user)}</strong>
 
       <div
         className="message-text"
@@ -34,10 +39,14 @@ const PlaceholderMessage = () => {
   )
 }
 
-const MessageContainer = ({ children }) => {
+const MessageContainer = ({ children, avatar = null }) => {
+  const avatarClassName = 'shrink-0 w-12 h-12 bg-slate-200 rounded'
   return (
     <li className="flex space-x-4">
-      <div className="shrink-0 w-12 h-12 bg-slate-200 rounded" />
+      {avatar === null
+        ? <div className={avatarClassName} />
+        : <img className={avatarClassName} src={avatar} />
+      }
 
       <div className="grow">
         {children}

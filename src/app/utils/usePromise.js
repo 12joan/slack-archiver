@@ -1,19 +1,15 @@
 import { useState, useEffect } from 'react'
+import * as ServiceResult from './serviceResult'
 
 const usePromise = getPromise => {
-  const [promiseState, setPromiseState] = useState({
-    state: 'pending',
-  })
+  const [result, setResult] = useState(ServiceResult.pending)
 
   useEffect(() => {
     const promise = getPromise()
-
-    promise
-      .then(value => setPromiseState({ state: 'resolved', data: value }))
-      .catch(error => setPromiseState({ state: 'rejected', data: error }))
+    ServiceResult.fromPromise(promise).then(setResult)
   }, [])
 
-  return handlers => handlers[promiseState.state](promiseState.data)
+  return result
 }
 
 export default usePromise

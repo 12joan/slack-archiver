@@ -2,6 +2,6 @@
   "watch": [
     "src/server.js",
     "src/api/",
-    "src/bolt/"
+    "src/slack/"
   ]
 }

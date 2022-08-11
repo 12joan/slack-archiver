@@ -1,17 +1,17 @@
 import express from 'express'
 import { checkViewToken } from '../models/accessToken.js'
 import { fetchMessagesForChannel } from '../models/message.js'
+import fetchUsers from '../slack/fetchUsers.js'
 
 const app = express.Router()
 
-app.get('/view/:token', async (req, res) => {
-  const { token } = req.params
-  const { state, team, channel } = await checkViewToken(token)
+const withValidToken = func => async (...args) => {
+  const [req, res] = args
+  const token = await checkViewToken(req.params.token)
 
-  switch (state) {
+  switch (token.state) {
     case 'valid':
-      const messages = await fetchMessagesForChannel({ team, channel })
-      res.json({ ok: true, data: messages })
+      return func(token, ...args)
       break
 
     case 'invalid':
@@ -25,6 +25,17 @@ app.get('/view/:token', async (req, res) => {
     default:
       throw new Error(`Unknown state: ${state}`)
   }
-})
+}
+
+app.get('/messages/:token', withValidToken(async (token, req, res) => {
+  const { team, channel } = token
+  const messages = await fetchMessagesForChannel({ team, channel })
+  res.json({ ok: true, data: messages })
+}))
+
+app.get('/users/:token', withValidToken(async (token, req, res) => {
+  const users = await fetchUsers(token.team)
+  res.json({ ok: true, data: users })
+}))
 
 export default app
