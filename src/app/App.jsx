@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import './css/application.css'
 import ViewChannel from './pages/ViewChannel'
 
 const App = () => {
