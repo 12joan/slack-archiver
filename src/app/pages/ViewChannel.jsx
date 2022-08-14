@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import useFetch from '../utils/useFetch'
 import MessageList, { PlaceholderMessageList } from '../components/MessageList'
 import * as ServiceResult from '../utils/serviceResult'
@@ -11,6 +11,11 @@ const ViewChannel = () => {
   const token = window.location.hash.slice(1)
   const fetchMessages = useFetch(`/api/messages/${token}`)
   const fetchUsers = useFetch(`/api/users/${token}`)
+
+  useEffect(() => {
+    if (fetchMessages.type === 'success' && window.scrollY === 0)
+      window.scrollTo(0, document.body.scrollHeight)
+  }, [fetchMessages.type])
 
   const lookupUser = userId => ServiceResult.bind(fetchUsers, users => {
     const user = users.find(user => user.id === userId)
