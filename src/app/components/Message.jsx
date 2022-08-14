@@ -1,6 +1,7 @@
 import React from 'react'
 import { toHTML as renderMarkdown } from 'slack-markdown'
 import MessageAttachment from './MessageAttachment'
+import MessageFile from './MessageFile'
 
 const Message = ({ data, context }) => {
   const { lookupUserName, lookupUserAvatar } = context
@@ -17,7 +18,10 @@ const Message = ({ data, context }) => {
   })
 
   return (
-    <MessageContainer avatar={lookupUserAvatar(data.user)}>
+    <MessageContainer
+      avatar={lookupUserAvatar(data.user)}
+      onClick={() => console.log(data)}
+    >
       <div className="flex space-x-2">
         <strong className="hover:underline cursor-pointer">
           {lookupUserName(data.user)}
@@ -32,6 +36,10 @@ const Message = ({ data, context }) => {
         className="message-text"
         dangerouslySetInnerHTML={{ __html: renderedText }}
       />
+
+      {(data.files ?? []).map((file, i) => (
+        <MessageFile key={i} data={file} />
+      ))}
 
       {(data.attachments ?? []).map((attachment, i) => (
         <MessageAttachment key={i} data={attachment} />
@@ -51,11 +59,14 @@ const PlaceholderMessage = () => {
   )
 }
 
-const MessageContainer = ({ children, avatar = null }) => {
+const MessageContainer = ({ children, avatar = null, ...otherProps }) => {
   const avatarClassName = 'shrink-0 w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden'
 
   return (
-    <li className="flex space-x-3 hover:bg-slate-50 hover:dark:bg-slate-900 -mx-4 px-4 py-2">
+    <li
+      className="flex space-x-3 hover:bg-slate-50 hover:dark:bg-slate-900 -mx-4 px-4 py-2"
+      {...otherProps}
+    >
       {avatar === null
         ? <div className={avatarClassName} />
         : <a

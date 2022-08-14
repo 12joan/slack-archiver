@@ -17,6 +17,21 @@ const MessageAttachment = ({ data }) => {
             </strong>
           )}
 
+          {data.title && (
+            data.title_link && (
+              <a
+                href={data.title_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link"
+              >
+                <strong>{data.title}</strong>
+              </a>
+            ) || (
+              <strong>{data.title}</strong>
+            )
+          )}
+
           {data.text && <p>{data.text}</p>}
         </div>
       )}
