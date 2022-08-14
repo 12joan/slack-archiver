@@ -4,7 +4,7 @@ import ViewChannel from './pages/ViewChannel'
 
 const App = () => {
   return (
-    <main className="p-4">
+    <main className="p-4" style={{ wordBreak: 'break-word' }}>
       <Routes>
         <Route path="/app">
           <Route path="view" element={<ViewChannel />} />

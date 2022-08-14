@@ -3,7 +3,7 @@ import Message, { PlaceholderMessage } from './Message'
 
 const MessageList = ({ messages, MessageComponent = Message, className, ...otherProps }) => {
   return (
-    <ul className={`space-y-6 ${className || ''}`}>
+    <ul className={className}>
       {messages.map(message => (
         <MessageComponent key={message.ts} data={message} {...otherProps} />
      ))}

@@ -2,14 +2,16 @@ import React from 'react'
 
 const MessageAttachment = ({ data }) => {
   return (
-    <div className="mt-4 border-l-4 border-slate-500 pl-4 py-2 space-y-4">
+    <div className="mt-2 pl-4 py-2 space-y-2 relative before:block before:absolute before:inset-0 before:w-1 before:bg-slate-200 before:dark:bg-slate-700 before:rounded-full">
       {(data.service_name || data.text) && (
         <div>
           {data.service_name && (
             <strong className="flex gap-2 items-center">
-              {data.service_icon && (
-                <img src={data.service_icon} aria-hidden="true" className="max-h-4" />
-              )}
+              {data.service_icon && <img
+                src={data.service_icon}
+                aria-hidden="true"
+                className="h-5 rounded"
+              />}
 
               {data.service_name}
             </strong>

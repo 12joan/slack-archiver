@@ -3,5 +3,17 @@
 @tailwind utilities;
 
 .message-text a[href] {
-  @apply text-blue-600 hover:text-blue-800 underline;
+  @apply text-sky-700 dark:text-sky-500 hover:text-sky-800 hover:dark:text-sky-400 hover:underline;
+}
+
+.message-text > pre, .message-text > code {
+  @apply border rounded bg-slate-50 border-slate-200 dark:bg-slate-900 dark:border-slate-700;
+}
+
+.message-text > pre {
+  @apply p-2 whitespace-pre-wrap;
+}
+
+.message-text > code {
+  @apply p-1 text-rose-700 dark:text-orange-500;
 }
