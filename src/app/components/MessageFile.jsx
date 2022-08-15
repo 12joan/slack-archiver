@@ -1,12 +1,11 @@
 import React from 'react'
 import bytes from '../utils/bytes'
+import SafeLink from './SafeLink'
 
 const MessageFile = ({ data }) => {
   return (
-    <a
+    <SafeLink
       href={data.url_private}
-      target="_blank"
-      rel="noopener noreferrer"
       className="mt-2 block border border-slate-200 rounded p-3 bg-white space-y-1 hover:bg-slate-50 dark:border-slate-700 dark:bg-black dark:hover:bg-slate-900"
     >
       <div className="space-x-2">
@@ -17,7 +16,7 @@ const MessageFile = ({ data }) => {
       <div>
         Click to view file. You may need to sign in with Slack.
       </div>
-    </a>
+    </SafeLink>
   )
 }
 

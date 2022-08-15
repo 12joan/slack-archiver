@@ -1,4 +1,5 @@
 import React from 'react'
+import SafeLink from './SafeLink'
 
 const MessageAttachment = ({ data }) => {
   return (
@@ -19,14 +20,9 @@ const MessageAttachment = ({ data }) => {
 
           {data.title && (
             data.title_link && (
-              <a
-                href={data.title_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link"
-              >
+              <SafeLink href={data.title_link} className="link">
                 <strong>{data.title}</strong>
-              </a>
+              </SafeLink>
             ) || (
               <strong>{data.title}</strong>
             )
@@ -37,17 +33,13 @@ const MessageAttachment = ({ data }) => {
       )}
 
       {data.image_url && (
-        <a
-          href={data.image_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block">
+        <SafeLink href={data.image_url} className="block">
           <img
             src={data.image_url}
             alt={data.fallback}
             className="rounded w-auto max-w-sm"
           />
-        </a>
+        </SafeLink>
       )}
     </div>
   )

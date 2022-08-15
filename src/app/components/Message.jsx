@@ -1,21 +1,29 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { toHTML as renderMarkdown } from 'slack-markdown'
+import SafeLink, { sanitizeAnchorEl } from './SafeLink'
 import MessageAttachment from './MessageAttachment'
 import MessageFile from './MessageFile'
 
 const Message = ({ data, context }) => {
   const { lookupUserName, lookupUserAvatar } = context
 
-  const renderedText = renderMarkdown(data.text, {
-    escapeHtml: true,
-    slackCallbacks: {
-      user: ({ id }) => lookupUserName(id),
-    },
-    cssModuleNames: {
-      's-mention': 'p-1 rounded bg-sky-50 dark:bg-sky-500/25 text-sky-600 dark:text-sky-500 hover:bg-sky-100 hover:dark:bg-sky-600/25 cursor-pointer',
-      's-user': 'before:content-["@"]',
-    },
-  })
+  const renderedText = useMemo(() => {
+    const html = renderMarkdown(data.text, {
+      escapeHtml: true,
+      slackCallbacks: {
+        user: ({ id }) => lookupUserName(id),
+      },
+      cssModuleNames: {
+        's-mention': 'p-1 rounded bg-sky-50 dark:bg-sky-500/25 text-sky-600 dark:text-sky-500 hover:bg-sky-100 hover:dark:bg-sky-600/25 cursor-pointer',
+        's-user': 'before:content-["@"]',
+      },
+    })
+
+    const tempEl = document.createElement('div')
+    tempEl.innerHTML = html
+    tempEl.querySelectorAll('a').forEach(sanitizeAnchorEl)
+    return tempEl.innerHTML
+  }, [data.text, lookupUserName])
 
   return (
     <MessageContainer
@@ -69,10 +77,8 @@ const MessageContainer = ({ children, avatar = null, ...otherProps }) => {
     >
       {avatar === null
         ? <div className={avatarClassName} />
-        : <a
+        : <SafeLink
           href={avatar}
-          target="_blank"
-          rel="noopener noreferrer"
           className={avatarClassName}
           children={<img src={avatar} alt="Avatar" />}
         />
