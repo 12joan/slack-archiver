@@ -13,7 +13,7 @@ const viewCommand = handleErrors(async ({ command, context, respond }) => {
   const token = await grantViewToken(enterpriseId ?? teamId, channel)
 
   await respond({
-    text: `*<https://${process.env.WEB_HOST ?? 'example.com'}/app/view#${token}|View channel archive>* (Expires in 7 days)`,
+    text: `*<https://${process.env.WEB_HOST ?? 'example.com'}/app/view/${token}|View channel archive>* (Expires in 7 days)`,
     type: 'mrkdwn',
   })
 }, errorHandler)

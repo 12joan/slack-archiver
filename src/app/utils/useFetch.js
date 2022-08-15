@@ -1,8 +1,8 @@
 import usePromise from './usePromise'
 
-const useFetch = (...args) => {
+const useFetch = (url, fetchArgs = {}, dependencies) => {
   return usePromise(async () => {
-    const response = await fetch(...args)
+    const response = await fetch(url, fetchArgs)
 
     if (!response.ok)
       throw new Error(`${response.status} ${response.statusText}`)
@@ -16,7 +16,7 @@ const useFetch = (...args) => {
       throw new Error(json.error ?? 'Unknown error')
 
     return json.data
-  })
+  }, dependencies)
 }
 
 export default useFetch

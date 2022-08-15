@@ -29,8 +29,9 @@ const withValidToken = func => async (...args) => {
 
 app.get('/messages/:token', withValidToken(async (token, req, res) => {
   const { team, channel } = token
-  const messages = await fetchMessagesForChannel({ team, channel })
-  res.json({ ok: true, data: messages })
+  const page = Math.max(parseInt(req.query.page) || 1, 1)
+  const data = await fetchMessagesForChannel({ team, channel, page, limit: 100 })
+  res.json({ ok: true, data })
 }))
 
 app.get('/users/:token', withValidToken(async (token, req, res) => {

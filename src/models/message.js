@@ -52,18 +52,23 @@ const deleteMessage = ({ team, channel, ts }) => Message.destroy({
   },
 })
 
-const fetchMessagesForChannel = async ({ team, channel }) => {
-  const messages = await Message.findAll({
+const fetchMessagesForChannel = async ({ team, channel, page, limit }) => {
+  const { count: totalCount, rows: messages } = await Message.findAndCountAll({
     where: {
       team,
       channel,
     },
     order: [
-      ['ts', 'ASC'],
+      ['ts', 'DESC'],
     ],
+    offset: (page - 1) * limit,
+    limit,
   })
 
-  return messages.map(message => message.data)
+  return {
+    totalPages: Math.ceil(totalCount / limit),
+    messages: messages.reverse().map(message => message.data),
+  }
 }
 
 export {

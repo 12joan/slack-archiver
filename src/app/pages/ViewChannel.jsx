@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
+import { useParams, useSearchParams } from 'react-router-dom'
 import useFetch from '../utils/useFetch'
+import Button from '../components/Button'
 import MessageList, { PlaceholderMessageList } from '../components/MessageList'
 import * as ServiceResult from '../utils/serviceResult'
 
@@ -7,10 +9,21 @@ const ViewChannel = () => {
   if (import.meta.env.SSR)
     return <PlaceholderMessageList />
 
-  // Encode the token in the URL fragment to prevent leakage via Referer header
-  const token = window.location.hash.slice(1)
-  const fetchMessages = useFetch(`/api/messages/${token}`)
-  const fetchUsers = useFetch(`/api/users/${token}`)
+  const { token } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const pageNo = parseInt(searchParams.get('page')) || 1
+
+  const fetchMessages = useFetch(
+    `/api/messages/${token}?page=${pageNo}`,
+    {},
+    [token, pageNo]
+  )
+
+  const fetchUsers = useFetch(
+    `/api/users/${token}`,
+    {},
+    [token]
+  )
 
   useEffect(() => {
     if (fetchMessages.type === 'success' && window.scrollY === 0)
@@ -49,10 +62,38 @@ const ViewChannel = () => {
   return fetchMessages.unwrap({
     pending: () => <PlaceholderMessageList />,
     failure: error => <p>{error.message}</p>,
-    success: messages => <MessageList
-      messages={messages}
-      context={{ lookupUserName, lookupUserAvatar }}
-    />,
+    success: ({ totalPages, messages }) => (
+      <div className="space-y-4">
+        {pageNo < totalPages && (
+          <div className="text-center">
+            <Button
+              onClick={() => {
+                window.scrollTo(0, document.body.scrollHeight)
+                setSearchParams({ page: pageNo + 1 })
+              }}
+              children="Older messages"
+            />
+          </div>
+        )}
+
+        <MessageList
+          messages={messages}
+          context={{ lookupUserName, lookupUserAvatar }}
+        />
+
+        {pageNo > 1 && (
+          <div className="text-center">
+            <Button
+              onClick={() => {
+                window.scrollTo(0, 0)
+                setSearchParams({ page: pageNo - 1 })
+              }}
+              children="Newer messages"
+            />
+          </div>
+        )}
+      </div>
+    ),
   })
 }
 
