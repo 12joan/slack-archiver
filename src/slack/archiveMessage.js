@@ -14,7 +14,6 @@ const archiveMessage = async ({ token, team, channel, ts, data }) => {
       return
 
     const fileRecord = await findFile({ team, id })
-    console.log({ fileRecord })
 
     if (fileRecord === null || fileRecord === undefined) {
       const s3Key = `${team}/${id}`
