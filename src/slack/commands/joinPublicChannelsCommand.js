@@ -3,7 +3,7 @@ import withToken from '../withToken.js'
 import withPagination from '../withPagination.js'
 
 const errorHandler = async ({ error, respond }) => {
-  await respond(`Error joining channels: ${error.message}`)
+  await respond(`Error joining channels:\n\n\`\`\`\n${error.stack}\n\`\`\``)
   return { doNotLogError: true }
 }
 

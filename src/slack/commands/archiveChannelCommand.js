@@ -3,7 +3,7 @@ import withToken from '../withToken.js'
 import archiveChannel from '../archiveChannel.js'
 
 const errorHandler = async ({ error, respond }) => {
-  await respond(`Error archiving channel: ${error.message}.\n\nYou may need to invite the bot to the channel.`)
+  await respond(`Error archiving channel:\n\n\`\`\`\n${error.stack}\n\`\`\`\n\nYou may need to invite the bot to the channel.`)
   return { doNotLogError: true }
 }
 

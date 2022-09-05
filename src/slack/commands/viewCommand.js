@@ -2,7 +2,7 @@ import handleErrors from '../handleErrors.js'
 import { grantViewToken } from '../../models/accessToken.js'
 
 const errorHandler = async ({ error, respond }) => {
-  await respond(`Error creating view link: ${error.message}`)
+  await respond(`Error creating view link:\n\n\`\`\`\n${error.stack}\n\`\`\``)
   return { doNotLogError: true }
 }
 
