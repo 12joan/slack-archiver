@@ -2,6 +2,7 @@
   "watch": [
     "src/server.js",
     "src/database.js",
+    "src/s3.js",
     "src/api/",
     "src/slack/",
     "src/models/"

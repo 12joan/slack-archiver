@@ -23,6 +23,7 @@ oauth_config:
       - mpim:read
       - channels:history
       - groups:history
+      - files:read
     bot:
       - app_mentions:read
       - channels:history
@@ -35,6 +36,7 @@ oauth_config:
       - channels:join
       - groups:read
       - users:read
+      - files:read
 settings:
   event_subscriptions:
     request_url: <%= url_for('/slack/events') %>

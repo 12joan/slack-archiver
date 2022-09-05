@@ -1,7 +1,8 @@
 import handleErrors from '../handleErrors.js'
-import { createMessage, updateMessage, deleteMessage } from '../../models/message.js'
+import withToken from '../withToken.js'
+import archiveMessage, { deleteMessage } from '../archiveMessage.js'
 
-export default app => app.event('message', handleErrors(async ({ event, context }) => {
+export default app => app.event('message', handleErrors(withToken(async ({ event, context, token }) => {
   const enterpriseOrTeamId = context.enterpriseId ?? context.teamId
   const { subtype = 'message_posted' } = event
 
@@ -12,7 +13,8 @@ export default app => app.event('message', handleErrors(async ({ event, context 
     case 'channel_join':
     case 'message_replied':
     case 'message_posted':
-      await createMessage({
+      await archiveMessage({
+        token,
         team: enterpriseOrTeamId,
         channel: event.channel,
         ts: event.ts,
@@ -21,7 +23,8 @@ export default app => app.event('message', handleErrors(async ({ event, context 
       break
 
     case 'message_changed':
-      await updateMessage({
+      await archiveMessage({
+        token,
         team: enterpriseOrTeamId,
         channel: event.channel,
         ts: event.message.ts,
@@ -44,4 +47,4 @@ export default app => app.event('message', handleErrors(async ({ event, context 
     default:
       console.warn(`Unhandled event subtype: ${subtype}`, event)
   }
-}))
+})))

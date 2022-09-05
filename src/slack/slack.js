@@ -19,6 +19,7 @@ const receiver = new ExpressReceiver({
     'mpim:history',
     'users:read',
     'commands',
+    'files:read',
   ],
   installationStore,
   endpoints: {

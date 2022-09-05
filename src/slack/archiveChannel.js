@@ -1,12 +1,13 @@
 import withPagination from './withPagination.js'
-import { createOrUpdateMessage } from '../models/message.js'
+import archiveMessage from './archiveMessage.js'
 
 const archiveChannel = async ({ team, channel, client, token }) => {
   let newMessages = 0
 
   const handleMessages = async messages => {
     newMessages += (
-      await Promise.all(messages.map(message => createOrUpdateMessage({
+      await Promise.all(messages.map(message => archiveMessage({
+        token,
         team,
         channel,
         ts: message.ts,
