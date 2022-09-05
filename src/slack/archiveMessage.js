@@ -9,6 +9,9 @@ const archiveMessage = async ({ token, team, channel, ts, data }) => {
   const { files = [] } = data
 
   await Promise.all(files.map(async ({ id, url_private: url }) => {
+    if (url === undefined || url === null)
+      return
+
     const fileRecord = await findFile({ team, id })
 
     if (fileRecord === null || fileRecord === undefined) {
