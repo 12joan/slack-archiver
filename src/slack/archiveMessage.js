@@ -2,17 +2,19 @@ import got from 'got'
 import { createOrUpdateMessage, deleteMessage } from '../models/message.js'
 import { findFile, createFile, updateFile } from '../models/file.js'
 import { uploadFile } from '../s3.js'
+import sequence from './sequence.js'
 
 const archiveMessage = async ({ token, team, channel, ts, data }) => {
   await createOrUpdateMessage({ team, channel, ts, data })
 
   const { files = [] } = data
 
-  await Promise.all(files.map(async ({ id, url_private: url }) => {
+  await sequence(files.map(({ id, url_private: url }) => async () => {
     if (url === undefined || url === null)
       return
 
     const fileRecord = await findFile({ team, id })
+    console.log({ fileRecord })
 
     if (fileRecord === null || fileRecord === undefined) {
       const s3Key = `${team}/${id}`

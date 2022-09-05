@@ -1,12 +1,13 @@
 import withPagination from './withPagination.js'
 import archiveMessage from './archiveMessage.js'
+import sequence from './sequence.js'
 
 const archiveChannel = async ({ team, channel, client, token }) => {
   let newMessages = 0
 
   const handleMessages = async messages => {
     newMessages += (
-      await Promise.all(messages.map(message => archiveMessage({
+      await sequence(messages.map(message => () => archiveMessage({
         token,
         team,
         channel,
@@ -23,7 +24,7 @@ const archiveChannel = async ({ team, channel, client, token }) => {
 
     const messagesWithReplies = messages.filter(message => (message.reply_count ?? 0) > 0) 
 
-    await Promise.all(messagesWithReplies.map(async messageWithReplies =>
+    await sequence(messagesWithReplies.map(messageWithReplies => async () =>
       withPagination(
         cursor => client.conversations.replies({ token, channel, ts: messageWithReplies.ts, cursor })
       )(async ({ messages }) => {
