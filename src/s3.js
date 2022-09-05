@@ -1,27 +1,8 @@
 import { S3Client, CreateBucketCommand } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
-const { lookup } = (await import('dns')).promises
-
-// S3Client cannot consume hostnames like 's3', so resolve to IP address
-const envEndpoint = process.env.S3_ENDPOINT
-let endpoint
-
-if (envEndpoint === undefined) {
-  endpoint = undefined
-} else {
-  const uri = new URL(envEndpoint)
-  const { address } = await lookup(uri.hostname)
-
-  endpoint = {
-    hostname: address,
-    path: uri.pathname,
-    port: uri.port,
-    protocol: uri.protocol.slice(0, -1),
-  }
-}
 
 const client = new S3Client({
-  endpoint,
+  endpoint: process.env.S3_ENDPOINT,
   region: process.env.S3_REGION || 'us-east-1',
   forcePathStyle: true,
   credentials: {
